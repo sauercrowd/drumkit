@@ -7,11 +7,12 @@ AC_PROG_CXX
 AC_LANG([C++])
 AC_TYPE_SIZE_T
 
-PKG_CHECK_MODULES([GSTREAMER_DEPS], [gstreamer-1.0])
+PKG_CHECK_MODULES([PORTAUDIO_DEP], [portaudio-2.0])
 
 AC_PROG_CC
 AC_CONFIG_FILES([
  Makefile
  src/Makefile
 ])
+AX_CXX_COMPILE_STDCXX_11(noext,mandatory)
 AC_OUTPUT

@@ -1,0 +1,25 @@
+version: v1.0
+name: Drumkit
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+blocks:
+  - name: Drumkit
+    task:
+      jobs:
+        - name: Compiling
+          commands:
+            - checkout
+            - autoreconf --install
+            - ./configure
+            - make
+        - name: Linting
+          commands:
+            - checkout
+            - python3 -m cpplint src/*.cpp
+      prologue:
+        commands:
+          - sudo apt install -y portaudio19-dev autoconf-archive python3 python3-pip
+          - python3 -m pip install --user cpplint
+
