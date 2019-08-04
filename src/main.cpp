@@ -9,4 +9,4 @@ int main(int argc, char **argv){
 
 	pipeline = gst_parse_launch("playbin uri=https://www.freedesktop.org/software/gstreamer-sdk/data/media/sintel_trailer-480p.webm", NULL);
 	return 0;
-}
+
