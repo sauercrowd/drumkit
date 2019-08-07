@@ -3,15 +3,18 @@
 #include <cinttypes>
 #include <iostream>
 
+#define SAMPLE_RATE (44100)
+
 typedef struct {
     float left_phase;
     float right_phase;
 } paTestData;
 
+static paTestData testData;
 
 static int patestCallback(const void *inputBuffer,
                void *outputBuffer,
-               int64_t framesPerBuffer,
+               unsigned long framesPerBuffer,  // NOLINT 4
                const PaStreamCallbackTimeInfo* timeInfo,
                PaStreamCallbackFlags statusFlags,
                void *userData) {
@@ -35,14 +38,44 @@ static int patestCallback(const void *inputBuffer,
 int main(int argc, char** argv) {
     PaError err = Pa_Initialize();
     if (err != paNoError) {
-        std::cout << "PortAudio error:" << Pa_GetErrorText(err) << std::endl;
+        std::cerr << "PortAudio error:" << Pa_GetErrorText(err) << std::endl;
+        return -1;
+    }
+
+    PaStream *stream;
+
+    err = Pa_OpenDefaultStream(&stream,
+            0,  // no input
+            2,  // stereo output
+            paFloat32,  // 32 bit floating point output
+            SAMPLE_RATE,
+            256,  // frames per buffer
+            patestCallback,
+            &testData);
+    if (err != paNoError) {
+        std::cerr << "PortAudio error:" << Pa_GetErrorText(err) << std::endl;
+        return -1;
+    }
+
+    err = Pa_StartStream(stream);
+    if (err != paNoError) {
+        std::cerr << "PortAudio error:" << Pa_GetErrorText(err) << std::endl;
+        return -1;
+    }
+
+    Pa_Sleep(20*1000);
+
+    err = Pa_StopStream(stream);
+    if (err != paNoError) {
+        std::cerr << "PortAudio error:" << Pa_GetErrorText(err) << std::endl;
         return -1;
     }
 
     err = Pa_Terminate();
     if (err != paNoError) {
-        std::cout << "PortAudio error:" << Pa_GetErrorText(err) << std::endl;
+        std::cerr << "PortAudio error:" << Pa_GetErrorText(err) << std::endl;
         return -1;
     }
+
     return 0;
 }
