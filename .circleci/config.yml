@@ -20,5 +20,5 @@ jobs:
       - checkout
       - run: sudo apt install -y python3 python3-pip
       - run: python3 -m pip install cpplint
-      - run: cpplint src/*.cpp
+      - run: python3 -m cpplint src/*.cpp
 
