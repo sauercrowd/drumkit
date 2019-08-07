@@ -1,13 +1,13 @@
 version: 2
 jobs:
-  build:
+  compile:
     docker:
       - image: ubuntu:18.04
     steps:
       - checkout
       - run: sudo apt install -y portaudio19-dev autoconf-archive
       - run: autoreconf --install && ./configure && make
-  build:
+  lint:
     docker:
       - image: ubuntu:18.04
     steps:
